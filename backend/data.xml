@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE marks SYSTEM "marks.dtd">
+<marks>
+    <record id="1">
+        <studentName>Alice</studentName>
+        <subject>Math</subject>
+        <score>85</score>
+    </record>
+    <record id="2">
+        <studentName>Bob</studentName>
+        <subject>Math</subject>
+        <score>92</score>
+    </record>
+</marks>

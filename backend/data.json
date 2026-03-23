@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "studentName": "Alice",
+    "regNo": "stu123",
+    "courseCode": "CS23401",
+    "courseType": "LIT",
+    "subjects": {
+      "A1": 85,
+      "A2": 92,
+      "L1": 90,
+      "L2": 88,
+      "Asg1": 100,
+      "internal": 45.5
+    }
+  },
+  {
+    "id": 2,
+    "studentName": "Alice",
+    "regNo": "stu123",
+    "courseCode": "MA23C03",
+    "courseType": "T",
+    "subjects": {
+      "A1": 40,
+      "A2": 45,
+      "Asg1": 50,
+      "Asg2": 50,
+      "internal": 18.5
+    }
+  },
+  {
+    "id": 3,
+    "studentName": "Bob",
+    "regNo": "stu124",
+    "courseCode": "PHY101",
+    "courseType": "T",
+    "subjects": {
+      "A1": 60,
+      "A2": 70,
+      "Asg1": 80,
+      "Asg2": 90,
+      "internal": 35
+    }
+  },
+  {
+    "studentName": "Hariharan",
+    "regNo": "2024103550",
+    "courseCode": "CS23403",
+    "courseType": "T",
+    "subjects": {
+      "A1": 90,
+      "A2": 95,
+      "Asg1": 100,
+      "Asg2": 85,
+      "internal": 37
+    },
+    "id": 1774241108414
+  },
+  {
+    "studentName": "Krishnarajan",
+    "regNo": "2024103550",
+    "courseCode": "CS23401",
+    "courseType": "T",
+    "subjects": {
+      "A1": 90,
+      "A2": 95,
+      "Asg1": 85,
+      "Asg2": 80,
+      "internal": 35
+    },
+    "id": 1774255308269,
+    "signatureHash": "b741a040ecacfc50b2c4ba671df69f5580f29d129f73fcd192a5145e6600bb30"
+  }
+]

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JS Marks System</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Embedded XML -->
+    <script id="embeddedXml" type="text/xml">
+        <config>
+            <appName>Internal Marks &amp; Result System</appName>
+            <version>1.0</version>
+            <theme>light</theme>
+        </config>
+    </script>
+</head>
+<body>
+    <header>
+        <h1 id="mainTitle">Loading Title...</h1>
+        <div id="clockDisplay" class="clock">00:00:00</div>
+    </header>
+
+    <!-- Inline events demonstration -->
+    <main>
+        <section id="marksSection" class="card">
+            <h2>Add New Mark</h2>
+            <div id="countdownContainer">Form opens in <span id="countdown">5</span>s</div>
+            
+            <div id="formContainer" style="display:none;">
+                <input type="text" id="studentName" placeholder="Student Name" />
+                <input type="text" id="subject" placeholder="Subject" />
+                <input type="number" id="marks" placeholder="Marks" />
+                <button id="addBtn">Add Record</button>
+            </div>
+            
+            <!-- Alert Button (Inline event) -->
+            <button onclick="alert('This is an inline event handler alert!')" onmouseover="this.style.backgroundColor='#ccc'" onmouseout="this.style.backgroundColor=''">Show Alert</button>
+        </section>
+
+        <section class="card">
+            <h2>Records</h2>
+            <ul id="marksList">
+                <!-- Marks will be populated here -->
+            </ul>
+        </section>
+        
+        <section class="card">
+            <h2>Load External Data</h2>
+            <button id="loadJsonBtn">Load JSON via Node API</button>
+            <button id="loadXmlBtn">Load XML via Node API</button>
+            <div id="apiOutput" style="margin-top: 10px; padding: 10px; background: #eaeff5"></div>
+        </section>
+    </main>
+    
+    <!-- External JS Link -->
+    <script src="script.js"></script>
+</body>
+</html>

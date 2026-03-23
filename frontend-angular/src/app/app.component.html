@@ -1,0 +1,25 @@
+<div class="ng-container">
+  <h1>Entered Student List from Backend</h1>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    {{ errorMessage }}
+  </div>
+
+  <table class="student-table" *ngIf="groupedStudents.length > 0">
+      <thead>
+          <tr>
+              <th>Registration No</th>
+              <th>Student Name</th>
+              <th>Enrolled Courses</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr app-student-row *ngFor="let student of groupedStudents" [student]="student">
+          </tr>
+      </tbody>
+  </table>
+
+  <div *ngIf="groupedStudents.length === 0 && !errorMessage" class="no-data">
+      No students found in the backend. Please add marks in the React Admin Dashboard.
+  </div>
+</div>

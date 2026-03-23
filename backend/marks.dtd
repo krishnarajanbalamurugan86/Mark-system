@@ -1,0 +1,6 @@
+<!ELEMENT marks (record+)>
+<!ELEMENT record (studentName, subject, score)>
+<!ATTLIST record id ID #REQUIRED>
+<!ELEMENT studentName (#PCDATA)>
+<!ELEMENT subject (#PCDATA)>
+<!ELEMENT score (#PCDATA)>
