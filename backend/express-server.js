@@ -33,37 +33,10 @@ app.use((req, res, next) => {
     myEmitter.emit('requestReceived', req.url);
     next();
 });
-app.use(express.static(path.join(__dirname, "public")));
 
-app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-});
-
-// Serve frontend-vanilla statically (already existing usage of express.static)
-app.use('/vanilla', express.static(path.join(__dirname, '../frontend-vanilla')));
-
-// [USER REQUEST]: use express.static
-// Adding another express.static just to explicitly serve an 'assets' folder (even if it doesn't exist yet)
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-// Serve React production build
-app.use('/react', express.static(path.join(__dirname, '../frontend-react/dist')));
-// SPA routing fallback for React
-app.get(/^\/react(?:\/.*)?$/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend-react/dist/index.html'));
-});
-
-// Serve Angular production build
-app.use('/angular', express.static(path.join(__dirname, '../frontend-angular/dist/frontend-angular/browser')));
-// SPA routing fallback for Angular
-app.get(/^\/angular(?:\/.*)?$/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend-angular/dist/frontend-angular/browser/index.html'));
-});
-
-// Home Route Redirect
-app.get('/', (req, res) => {
-    res.redirect('/react'); // Let's redirect home to React for convenience
-});
+// --- Static Frontend Serving ---
+// Serve the unified 'public' directory (e.g., your built React app)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // API Route for Marks Data (JSON)
 app.get('/api/marks', async (req, res) => {
@@ -111,13 +84,13 @@ app.get('/api/marks-xml', (req, res) => {
     });
 });
 
-// Send File explicit example
-app.get('/manual-file', (req, res) => {
-    // absolute path using __dirname
-    res.sendFile(path.join(__dirname, '../frontend-vanilla/index.html'));
+// Fallback SPA Route for frontend routing (e.g. React Router)
+// This must be placed AFTER all API routes
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Fallback Route / 404
+// Fallback Route / 404 for things not caught
 app.use((req, res) => {
     res.status(404).send('<h1>404 Page Not Found</h1>');
 });
