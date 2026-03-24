@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "public/dist/index.html"));
+    res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 // Serve frontend-vanilla statically (already existing usage of express.static)
