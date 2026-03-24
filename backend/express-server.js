@@ -8,14 +8,14 @@ const mongoose = require('mongoose');
 const Mark = require('./models/Mark');
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/marks-system')
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 const app = express();
 const port = process.env.PORT || 3000;
 const apiSecret = process.env.API_SECRET_KEY;
 
-class MyEmitter extends EventEmitter {}
+class MyEmitter extends EventEmitter { }
 const myEmitter = new MyEmitter();
 
 myEmitter.on('requestReceived', (url) => {
@@ -32,6 +32,11 @@ app.use(cors()); // default cors for React app
 app.use((req, res, next) => {
     myEmitter.emit('requestReceived', req.url);
     next();
+});
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 // Serve frontend-vanilla statically (already existing usage of express.static)
@@ -79,14 +84,14 @@ app.post('/api/marks', async (req, res) => {
     try {
         const newRecord = req.body;
         if (!newRecord.id) newRecord.id = Date.now();
-        
+
         // [USER REQUEST]: use crypto.createHash
         // We hash the student's name + id to create a unique signature, without affecting the existing frontend display
         newRecord.signatureHash = crypto.createHash('sha256').update(newRecord.studentName + newRecord.id).digest('hex');
-        
+
         const mark = new Mark(newRecord);
         await mark.save();
-        
+
         res.status(201).json(mark);
     } catch (err) {
         console.error('Error saving mark to DB:', err);
@@ -121,7 +126,7 @@ app.use((req, res) => {
 app.listen(port, () => {
     console.log(`Express server running on http://localhost:${port}`);
     console.log(`Loaded API Secret: ${apiSecret ? 'Yes' : 'No'}`);
-    
+
     // Demonstrate basic fs synchronous operation on startup
     if (!fs.existsSync(path.join(__dirname, 'server.log'))) {
         fs.writeFileSync(path.join(__dirname, 'server.log'), 'Server Log initialized.\n');
