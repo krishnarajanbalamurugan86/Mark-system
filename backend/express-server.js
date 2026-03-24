@@ -1,18 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events');
 const cors = require('cors'); // We need cors to communicate with React
+const mongoose = require('mongoose');
+const Mark = require('./models/Mark');
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/marks-system')
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const apiSecret = process.env.API_SECRET_KEY;
 
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
 
 myEmitter.on('requestReceived', (url) => {
     // Append to a log file
-    const logData = `[${new Date().toISOString()}] Request received on: ${url}\n`;
+    const logData = `[${new Date().toISOString()}] Request received on: ${url} (Secret Loaded: ${!!apiSecret})\n`;
     fs.appendFile(path.join(__dirname, 'server.log'), logData, (err) => {
         if (err) console.error('Error writing to log file', err);
     });
@@ -53,26 +61,22 @@ app.get('/', (req, res) => {
 });
 
 // API Route for Marks Data (JSON)
-app.get('/api/marks', (req, res) => {
-    fs.readFile(path.join(__dirname, 'data.json'), 'utf8', (err, data) => {
-        if (err) {
-            res.status(500).send('Error reading internal data');
-            return;
-        }
+app.get('/api/marks', async (req, res) => {
+    try {
+        const marks = await Mark.find({});
         res.setHeader('Content-Type', 'application/json');
-        res.send(data);
-    });
+        res.json(marks);
+    } catch (err) {
+        console.error('Error fetching marks from DB:', err);
+        res.status(500).send('Error reading internal data');
+    }
 });
 
 const crypto = require('crypto'); // [USER REQUEST]: require crypto
 
 // API Route for POSTing new Marks Data
-app.post('/api/marks', (req, res) => {
-    fs.readFile(path.join(__dirname, 'data.json'), 'utf8', (err, data) => {
-        let marks = [];
-        if (!err && data) {
-            try { marks = JSON.parse(data); } catch(e){}
-        }
+app.post('/api/marks', async (req, res) => {
+    try {
         const newRecord = req.body;
         if (!newRecord.id) newRecord.id = Date.now();
         
@@ -80,15 +84,14 @@ app.post('/api/marks', (req, res) => {
         // We hash the student's name + id to create a unique signature, without affecting the existing frontend display
         newRecord.signatureHash = crypto.createHash('sha256').update(newRecord.studentName + newRecord.id).digest('hex');
         
-        marks.push(newRecord);
-        fs.writeFile(path.join(__dirname, 'data.json'), JSON.stringify(marks, null, 2), (err) => {
-            if (err) {
-                res.status(500).send('Error saving data');
-                return;
-            }
-            res.status(201).json(newRecord);
-        });
-    });
+        const mark = new Mark(newRecord);
+        await mark.save();
+        
+        res.status(201).json(mark);
+    } catch (err) {
+        console.error('Error saving mark to DB:', err);
+        res.status(500).send('Error saving data');
+    }
 });
 
 // API Route for XML Data
@@ -117,6 +120,7 @@ app.use((req, res) => {
 // Start Server
 app.listen(port, () => {
     console.log(`Express server running on http://localhost:${port}`);
+    console.log(`Loaded API Secret: ${apiSecret ? 'Yes' : 'No'}`);
     
     // Demonstrate basic fs synchronous operation on startup
     if (!fs.existsSync(path.join(__dirname, 'server.log'))) {
